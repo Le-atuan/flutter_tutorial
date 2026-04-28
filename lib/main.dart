@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: .fromSeed(seedColor: const Color(0xFFEC1C2A)),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Home Page'),
     );
   }
 }
@@ -115,24 +115,22 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             FloatingActionButton(
-              heroTag: 'clear',
               onPressed: _clearCounter,
-              backgroundColor: Colors.red,
-              child: const Icon(Icons.clear),
+              child: const Icon(Icons.close),
             ),
             FloatingActionButton(
-              heroTag: 'increment',
               onPressed: _incrementCounter,
               child: const Icon(Icons.add),
             ),
           ],
         ),
       ),
+      floatingActionButtonLocation: .centerDocked,
     );
   }
 }
