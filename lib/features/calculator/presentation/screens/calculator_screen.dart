@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tutorial_app/shared/provider/calculator_provider.dart';
+import 'package:provider/provider.dart';
 import '../widgets/calc_button.dart';
 
 class CalculatorScreen extends StatelessWidget {
@@ -6,40 +8,56 @@ class CalculatorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<CalculatorProvider>();
+    
     final buttons = [
       'C','()','%','÷',
-      '7', '8', '9', '*',
-      '4', '5', '6', '-',
-      '1', '2', '3', '+',
-      '⌫', '0', '.', '=',
+      '7','8','9','×',
+      '4','5','6','-',
+      '1','2','3','+',
+      '⌫','0','.','=',
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Calculator')),
+      appBar: AppBar(
+        title: const Text('Calculator'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.history),
+            onPressed: () => Navigator.pushNamed(context, '/history'),
+          ),
+        ],
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(16,24,16,24),
         child: Column(
           children: [
             Expanded(
               flex: 1,
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.fromLTRB(16,24,16,24),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade200,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Column(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text('123 + 456', style: TextStyle(fontSize: 20)),
-                    SizedBox(height: 8),
                     Text(
-                      '579',
+                      provider.input.isEmpty ? '' : provider.input,
+                      style: const TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      provider.result,
                       style: TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
+                        color: provider.isPreview ? Colors.grey : Colors.black,
                       ),
                     ),
                   ],
@@ -59,7 +77,9 @@ class CalculatorScreen extends StatelessWidget {
                 children: buttons.map((text) {
                   return CalcButton(
                     text: text,
-                    onPressed: () {},
+                    onPressed: () => context
+                        .read<CalculatorProvider>()
+                        .onButtonPressed(text),
                   );
                 }).toList(),
               ),

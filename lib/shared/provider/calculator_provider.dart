@@ -1,28 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tutorial_app/features/calculator/logic/calculate_logic.dart';
 
 class CalculatorProvider extends ChangeNotifier {
-  String input = '';
-  String result = '0';
+  final _logic = CalculateLogic();
 
-  List<String> history = [];
+  // ── public state mà UI đọc ──────────────────────────────
+  String get input  => _logic.expression;
+  String get result => _logic.result;
+  bool get isPreview => _logic.isPreview;
+  
+  List<String> get history => List.unmodifiable(_history);
 
-  /// thêm ký tự
-  void add(String value) {
-    input += value;
+  final List<String> _history = [];
+
+  void onButtonPressed(String text) {
+    final prevExpression = _logic.expression;
+    final prevResult     = _logic.result;
+
+    _logic.onButtonPressed(text);
+
+    // Lưu history khi bấm "="
+    if (text == '=' && prevExpression.isNotEmpty && prevResult != 'Error') {
+      _history.insert(0, '$prevExpression = ${_logic.result}');
+    }
+
     notifyListeners();
   }
 
-  /// clear
-  void clear() {
-    input = '';
-    result = '0';
-    notifyListeners();
-  }
-
-  /// tính toán (demo)
-  void calculate() {
-    result = input; 
-    history.insert(0, '$input = $result');
+  void clearHistory() {
+    _history.clear();
     notifyListeners();
   }
 }
